@@ -5,7 +5,7 @@
 // Keyboard support (enabled=1, disabled=0)
 #define KEYBOARD 1
 // MIDI USB support (enabled=1, disabled=0)
-#define MIDIUSB 1
+#define MIDIUSB 0
 // MIDI support (enabled=1, disabled=0)
 #define MIDI 1
 // Adafuit I2C 7-segment HT16K33 Backpack
@@ -13,7 +13,7 @@
 // Adafruit I2C 7-segment Adress
 #define SEVENSEGADDR 0x70
 // Adafruit I2C 7-segment Brightness 0 (min) to 15 (max)
-#define SEVENSEGBRIGHTNESS 0
+#define SEVENSEGBRIGHTNESS 15
 // define delay in global loop
 #define LOOPDELAY 100
 // send MIDI Control Value 0 on release
@@ -62,18 +62,34 @@ Adafruit_7segment sevenseg = Adafruit_7segment();
  *  LED pin defines LED for switch; 0 disables led
  */
 
-static char keyconfig[][8] = {{4, 1, 1, 18, 'K', KEY_UP_ARROW, 0, 0},  // Switch Pin 2, Bank 1, Display 1, LED disabled, Keyboard, press KEY_UP_ARROW
-                              {5, 1, 2, 0, 'K', KEY_DOWN_ARROW, 0, 0}, // Switch Pin 3, Bank 1, Display 2, LED disabled, Keyboard, press KEY_DOWN_ARROW
-                              {4, 2, 0, 18, 'K', '+', 0, 0},           // Switch Pin 2, Bank 2, Display 1, LED disabled, Keyboard, press +
-                              {5, 2, 0, 0, 'K', '-', 0, 0},            // Switch Pin 3, Bank 2, Display 2, LED disabled, Keyboard, press -
-                              {4, 3, 1, 18, 'M', 0, 48, 64},           // Switch Pin 2, Bank 3, Display 1, LED disabled, MIDI USB Note Channel 1, middle C, normal velocity
-                              {5, 3, 2, 0, 'm', 0, 48, 64},            // Switch Pin 3, Bank 4, Display 2, LED disabled, MIDI Note Channel 1, middle C, normal velocity
-                              {4, 4, 1, 18, 'C', 1, 20, 127},          // Switch Pin 3, Bank 3, Display 1, LED disabled, MIDI USB Control Channel 2, Control 20, Value 127
-                              {5, 4, 2, 0, 'c', 1, 20, 127},           // Switch Pin 2, Bank 5, Display 2, LED disabled, MIDI Control Channel 2, Control 20, Value 127
-                              {4, 5, 1, 18, 'P', 1, 20, 127},          // Switch Pin 2, Bank 4, Display 1, LED disabled, MIDI USB Program Change Channel 3, Control 40, Value 127
-                              {5, 5, 2, 0, 'p', 1, 20, 127},           // Switch Pin 3, Bank 5, Display 2, LED disabled, MIDI Program Change Channel 2, Control 20, Value 127
-                              {6, 0, 0, 0, 'b', 0, 0, 0},              // Switch Pin 4, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank down
-                              {7, 0, 0, 0, 'B', 0, 0, 0}               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+static char keyconfig[][8] = {{12, 0, 0, 0, 'K', KEY_UP_ARROW, 0, 0},   // Switch Pin 2, Bank 1, Display 1, LED disabled, Keyboard, press KEY_UP_ARROW
+                              {13, 0, 0, 0, 'K', KEY_DOWN_ARROW, 0, 0}, // Switch Pin 3, Bank 1, Display 2, LED disabled, Keyboard, press KEY_DOWN_ARROW
+                              {10, 0, 0, 0, 'b', 0, 0, 0},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {11, 0, 0, 0, 'B', 0, 0, 0},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {4, 1, 1, 18, 'p', 0, 0,  127},            // Switch Pin 2, Bank 2, Display 1, LED disabled, Keyboard, press +
+                              {4, 2, 1, 18, 'p', 0, 6,  127},            // Switch Pin 2, Bank 2, Display 1, LED disabled, Keyboard, press +
+                              {4, 3, 1, 18, 'p', 0, 12, 127},            // Switch Pin 2, Bank 2, Display 1, LED disabled, Keyboard, press +
+                              {4, 4, 1, 18, 'p', 0, 18, 127},            // Switch Pin 2, Bank 2, Display 1, LED disabled, Keyboard, press +
+                              {5, 1, 2, 19, 'p', 0, 1,  127},            // Switch Pin 3, Bank 2, Display 2, LED disabled, Keyboard, press -
+                              {5, 2, 2, 19, 'p', 0, 7,  127},            // Switch Pin 3, Bank 2, Display 2, LED disabled, Keyboard, press -
+                              {5, 3, 2, 19, 'p', 0, 13, 127},            // Switch Pin 3, Bank 2, Display 2, LED disabled, Keyboard, press -
+                              {5, 4, 2, 19, 'p', 0, 19, 127},            // Switch Pin 3, Bank 2, Display 2, LED disabled, Keyboard, press -
+                              {6, 1, 3, 20, 'p', 0, 2,  127},              // Switch Pin 4, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank down
+                              {6, 2, 3, 20, 'p', 0, 8,  127},              // Switch Pin 4, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank down
+                              {6, 3, 3, 20, 'p', 0, 14, 127},              // Switch Pin 4, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank down
+                              {6, 4, 3, 20, 'p', 0, 20, 127},              // Switch Pin 4, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank down
+                              {7, 1, 4, 21, 'p', 0, 3,  127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {7, 2, 4, 21, 'p', 0, 9,  127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {7, 3, 4, 21, 'p', 0, 15, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {7, 4, 4, 21, 'p', 0, 21, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {8, 1, 5, 22, 'p', 0, 4,  127},              // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {8, 2, 5, 22, 'p', 0, 10, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {8, 3, 5, 22, 'p', 0, 16, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {8, 4, 5, 22, 'p', 0, 22, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {9, 1, 6, 23, 'p', 0, 5,  127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {9, 2, 6, 23, 'p', 0, 11, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {9, 3, 6, 23, 'p', 0, 17, 127},               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
+                              {9, 4, 6, 23, 'p', 0, 23, 127}               // Switch Pin 5, Bank 0 (has to be 0), Display 0 (has to be 0), LED disabled, Bank up
                              };
 #define KCPIN 0
 #define KCBANK 1
